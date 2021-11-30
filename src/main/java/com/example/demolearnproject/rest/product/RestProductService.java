@@ -39,7 +39,10 @@ public class RestProductService {
         Product product1 = productOptional.get();
         product1.setName(product.getName());
         product1.setPrice(product.getPrice());
-        return product;
+
+        Product pp = repo.save(product1);
+
+        return pp;
     }
 
     public Product get(Integer id) throws ProductNotFoundException {

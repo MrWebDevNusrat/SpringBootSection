@@ -20,7 +20,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 120,nullable = false,unique = true)
+    @Column(length = 120,nullable = false,unique = false)
     private String name;
 
     private float price;

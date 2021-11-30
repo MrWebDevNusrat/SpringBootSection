@@ -60,9 +60,6 @@ public class RestProductController {
     @PutMapping("/product/{id}")
     public ResponseEntity<Object> updateProduct(@RequestBody Product product, @PathVariable Integer id) throws ProductNotFoundException {
 
-
-
-
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.update(product,id));
     }
 
@@ -72,12 +69,16 @@ public class RestProductController {
         return productDetails;
     }
 
+    @GetMapping("/productDetails/{productId}")
+    public List<ProductDetails> listProductId(){
+        List<ProductDetails> productDetails = productDetailsRepository.findAll();
+        return productDetails;
+    }
+
     @GetMapping("/fileDetails")
     public List<FileDetails> getListFileDetails(){
         List<FileDetails> fileDetails = fileDetailsRepository.findAll();
         return fileDetails;
     }
-
-
 
 }
