@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/admin">
+<head>
+  <meta charset="UTF-8">
+  <title>Product</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Users</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Product</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+          <!-- general form elements -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title"> Product form [[ ${pageTitle} ]]</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form th:action="@{/admin/product/save}" th:object="${product}" method="post" enctype="multipart/form-data">
+              <input type="hidden" th:field="*{id}" th:value="${product.id}">
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="exampleCategoryName">Product Name:</label>
+                  <input type="text" th:field="*{name}" id="exampleCategoryName" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleCategoryPrice">Product Price:</label>
+                  <input type="number" step="0.1" th:field="*{price}" id="exampleCategoryPrice" class="form-control" required>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-form-label col-sm-4">Category: </label>
+                  <div class="col-sm-8">
+                    <select th:field="*{category}" class="form-control" required>
+                      <!--/*@thymesVar id="listCategories" type="com"*/-->
+                      <th:block th:each="cat:${listCategories}">
+                        <option th:text="${cat.name}" th:value="${cat.id}" />
+                      </th:block>
+                    </select>
+                  </div>
+                </div>
+
+                <th:block th:if="${product.id == null}">
+                  <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Details #1: </label>
+                    <div class="col-sm-4">
+                      <input type="text" name="detailName" class="form-control" required placeholder="Name">
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="text" name="detailValue" class="form-control" required placeholder="Value">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Details #2: </label>
+                    <div class="col-sm-4">
+                      <input type="text" name="detailName" class="form-control" required placeholder="Name">
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="text" name="detailValue" class="form-control" required placeholder="Value">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Details #3: </label>
+                    <div class="col-sm-4">
+                      <input type="text" name="detailName" class="form-control" required placeholder="Name">
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="text" name="detailValue" class="form-control" required placeholder="Value">
+                    </div>
+                  </div>
+                </th:block>
+
+                <th:block th:unless="${product.id == null}" th:each="detail,status:${product.details}">
+                  <input type="hidden" name="detailID" th:value="${detail.id}">
+                  <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Details #[[ ${status.count} ]]: </label>
+                    <div class="col-sm-4">
+                      <input type="text" name="detailName" th:value="${detail.name }" class="form-control" required />
+                    </div>
+                    <div class="col-sm-4">
+                      <input type="text" name="detailValue" th:value="${detail.value }" class="form-control" required>
+                    </div>
+                  </div>
+                </th:block>
+
+                <div class="form-group row">
+                  <label for="exampleProductLogo">Product :</label>
+                  <input type="file" id="exampleProductLogo" name="fileImage">
+                </div>
+
+                <th:block th:if="${product.image != null}">
+                  <img th:src="@{${product.getImagePath()}}" class="img-fluid mb-2 thumbnailPhoto" width="300" height="300"/>
+                </th:block>
+                <th:block th:unless="${product.image != null}">
+                  <p>
+                    <img src="Logo Preview" alt="Logo" class="img-fluid mb-2 thumbnailPhoto" width="300" height="300">
+                  </p>
+                </th:block>
+
+                <h1>Sub images and files</h1>
+                <div class="form-group row">
+                  <div class="field_wrapper">
+                    <div>
+                      <p>
+                        <input type="file" name="detailFile" required/>
+                        <a href="javascript:void(0);" class="add_button btn btn-success" title="Add field"><i class="fas fa-plus"></i> Add</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <th:block th:each="fDetail,status:${product.fileDetails}">
+                  <!-- IF CUSTOMER IS ANONYMOUS -->
+                  <div th:if="${fDetail.fileExtension == 'jpg' || fDetail.fileExtension == 'jpeg' || fDetail.fileExtension == 'png'}" style="float: left;">
+                    <img th:src="@{'/product-images/' + ${product.id} + '/' + ${fDetail.file}}" class="" width="200" height="200"/>
+                  </div>
+                  <!-- ELSE -->
+                  <div th:unless="${fDetail.fileExtension == 'jpg' || fDetail.fileExtension == 'jpeg' || fDetail.fileExtension == 'png'}" style="float: left;">
+                    <a th:href="@{'/product-images/' + ${product.id} + '/' + ${fDetail.file}}" target="_blank"><img th:src="@{'/admin/img/download.png'}" class="" width="200" height="200"/></a>
+                  </div>
+                </th:block>
+
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-default" onclick="cencelForm()">Cencel</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+        </div>
+        <!--/.col (left) -->
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+
+</div>
+
+<script layout:fragment="script">
+  $(document).ready(function (){
+    $("#exampleProductLogo").change(function (){
+      showPhotosThumbnail(this);
+    });
+
+    /*for multiple file upload*/
+    var maxField = 10; //Input fields increment limitation
+    var addButton = $('.add_button'); //Add button selector
+    var wrapper = $('.field_wrapper'); //Input field wrapper
+    var fieldHTML = '<p><div><input type="file" name="detailFile" required/><a href="javascript:void(0);" class="remove_button btn btn-danger"><i class="far fa-trash-alt"></i> Remove</a></div></p>'; //New input field html
+    var x = 1; //Initial field counter is 1
+    //Once add button is clicked
+    $(addButton).click(function(){
+      //Check maximum number of input fields
+      if(x < maxField){
+        x++; //Increment field counter
+        $(wrapper).append(fieldHTML); //Add field html
+      }
+    });
+
+    //Once remove button is clicked
+    $(wrapper).on('click', '.remove_button', function(e){
+      e.preventDefault();
+      $(this).parent('div').remove(); //Remove field html
+      x--; //Decrement field counter
+    });
+
+    /*for multiple file upload*/
+  });
+
+  function showPhotosThumbnail(fileInput){
+    file = fileInput.files[0];
+    reader = new FileReader();
+
+    reader.onload = function (e){
+      $(".thumbnailPhoto").attr('src',e.target.result);
+    }
+
+    reader.readAsDataURL(file);
+
+  }
+
+</script>
+
+</body>
+</html>

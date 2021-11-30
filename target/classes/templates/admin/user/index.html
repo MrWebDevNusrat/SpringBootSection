@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/admin"
+>
+<head>
+  <meta charset="UTF-8">
+  <title>Users</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Users</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Users</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+
+  <div class="card">
+    <div class="card-header">
+      <div class="float-left">
+        <h1 class="card-title font-weight-bold" style="line-height: 2;">Users list</h1>
+      </div>
+      <div class="float-right">
+        <a class="btn btn-block btn-success" th:href="@{/admin/user/new}">New user</a>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Roles</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="user:${listUser}">
+          <tr>
+            <td>[[ ${user.id} ]]</td>
+            <td>[[ ${user.email} ]]</td>
+            <td>[[ ${user.roles} ]]</td>
+            <td>
+              <a th:href="@{'/admin/user/edit/' + ${user.id}}" class="mr-3 btn btn-success btn-sm"><i class="fas fa-edit"></i> Edit </a>
+              <a th:href="@{'/admin/user/delete/' + ${user.id}}" class="mr-3 btn btn-danger  btn-sm"><i class="fas fa-trash"></i> Delete </a>
+            </td>
+          </tr>
+        </th:block>
+        </tbody>
+        <tfoot>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Roles</th>
+          <th></th>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+
+</div>
+
+</body>
+</html>

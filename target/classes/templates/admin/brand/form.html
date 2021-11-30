@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/admin">
+<head>
+  <meta charset="UTF-8">
+  <title>Brands</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Brands</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Brands</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+          <!-- general form elements -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title"> Brand form [[ ${pageTitle} ]]</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form th:action="@{/admin/brand/save}" th:object="${brand}" method="post" enctype="multipart/form-data">
+              <input type="hidden" th:field="*{id}" th:value="${brand.id}">
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="exampleBrandName">Brand Name:</label>
+                  <input type="text" th:field="*{name}" id="exampleBrandName" class="form-control" required>
+                </div>
+                <div class="form-group row">
+                  <label class="col-form-label col-sm-4">Choose one or more categories: </label>
+                  <div class="col-sm-8">
+                    <select th:field="*{categories}" class="form-control"  multiple="multiple" required>
+                      <th:block th:each="cat:${listCategories}">
+                        <option th:text="${cat.name}" th:value="${cat.id}" accept=""/>
+                      </th:block>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="exampleBrandLogo">Brand logo:</label>
+                  <input type="file" id="exampleBrandLogo"  name="fileImage">
+                </div>
+
+                <th:block th:if="${brand.logo != null}">
+                  <img th:src="@{${brand.getLogoImagePath()}}" class="img-fluid mb-2 thumbnail" width="300" height="300"/>
+                </th:block>
+                <th:block th:unless="${brand.logo != null}">
+                  <p>
+                    <img src="Logo Preview" alt="Logo" class="img-fluid mb-2 thumbnail" width="300" height="300">
+                  </p>
+                </th:block>
+
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-default" onclick="cencelForm()">Cencel</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+        </div>
+        <!--/.col (left) -->
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+
+
+</div>
+
+
+  <script layout:fragment="script">
+    $(document).ready(function () {
+      $('#exampleBrandLogo').change(function () {
+        showImageThumbnail(this);
+      });
+
+    });
+
+    function showImageThumbnail(fileInput){
+      file = fileInput.files[0];
+      reader = new FileReader();
+
+      reader.onload = function (e){
+        $('.thumbnail').attr('src',e.target.result);
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    /*for multiple file upload */
+
+
+
+  </script>
+
+
+</body>
+</html>

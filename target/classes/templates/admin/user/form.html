@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/admin">
+<head>
+  <meta charset="UTF-8">
+  <title>Categories</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Users</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Users</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+          <!-- general form elements -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title"> User form [[ ${pageTitle} ]]</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form th:action="@{/admin/user/save}" th:object="${user}" method="post" enctype="multipart/form-data">
+              <input type="hidden" th:field="*{id}" th:value="${user.id}">
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="exampleUsername">User Name:</label>
+                  <input type="text" th:field="*{username}" id="exampleUsername" class="form-control">
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleUserEmail">User email:</label>
+                  <input type="email" th:field="*{email}" id="exampleUserEmail" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleUserPassword">User password:</label>
+                  <input type="password" th:field="*{password}" id="exampleUserPassword" class="form-control">
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleUserRole">User role: </label>
+                  <select name="role" id="exampleUserRole">
+                    <option value="ROLE_USER">User</option>
+                    <option value="ROLE_ADMIN">Admin</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleUserPassword">Roles:</label>
+                  <div class="col-sm-8">
+                    <th:block th:each="role:${listRoles}">
+                      <div>
+                        <input type="checkbox" th:field="*{roles}" th:text="${role.name}" th:value="${role.id}">
+                      </div>
+                    </th:block>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <input type="checkbox" id="exampleUserEnabled" name="enabled" value="1">
+                  <label for="exampleUserEnabled">User Enabled</label>
+                </div>
+
+                <div class="form-group">
+                  <label>Photos: </label>
+                  <input type="file" name="image" id="image" accept="image/png, image/jpeg" />
+                </div>
+
+                <th:block th:if="${user.photos != null}">
+                <img th:src="@{${user.photosImagePath}}" width="250" height="150"/>
+                </th:block>
+
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-default" onclick="cencelForm()">Cencel</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+        </div>
+        <!--/.col (left) -->
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+</body>
+</html>
