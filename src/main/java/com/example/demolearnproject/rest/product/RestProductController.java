@@ -3,6 +3,7 @@ package com.example.demolearnproject.rest.product;
 import com.example.demolearnproject.category.CategoryRespository;
 import com.example.demolearnproject.category.CategoryService;
 import com.example.demolearnproject.product.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,13 +50,20 @@ public class RestProductController {
         }
     }
 
+    @PostMapping("/product/add")
+    public ResponseEntity<?> addProduct(@RequestBody Product product){
+
+        return  ResponseEntity.status(200).body(productService.save(product));
+    }
+
+
     @PutMapping("/product/{id}")
-    public ResponseEntity<Object> updateStudent(@RequestBody Product product, @PathVariable Integer id) throws ProductNotFoundException {
+    public ResponseEntity<Object> updateProduct(@RequestBody Product product, @PathVariable Integer id) throws ProductNotFoundException {
 
-        Product student = productService.get(id);
-        productService.save(student);
 
-        return ResponseEntity.noContent().build();
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.update(product,id));
     }
 
     @GetMapping("/productDetails")
